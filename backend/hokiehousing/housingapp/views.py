@@ -12,7 +12,20 @@ def submit_quiz(request):
         data = json.loads(request.body)
 
         preferences = UserPreferences.objects.create(
-            desired_price = data["desired_price"]
+            on_campus = data['on_campus'],
+            in_suite_bath = data['in_suite_bath'],
+            desired_price = data["desired_price"],
+            max_price = data["max_price"],
+            utilities_included = data["utilities_included"],
+            living_learning_community = data["living_learning_community"],
+            ac = data["ac"],
+            public_transport = data["public_transport"],
+            desired_amenities = ["desired_amenities"],
+            desired_bathrooms = data["desired_bathrooms"],
+            desired_bedrooms = data["desired_bedrooms"],
+            desired_distance_from_campus = data["desired_distance_from_campus"],
+            max_distance_from_campus = data["max_distance_from_campus"],
+            importance = data["importance"]
         )
 
         return JsonResponse({'status': 'success', 'user_token': preferences.id})
