@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "./navbar";
+import BannerBackground from "../assets/background.webp"
 import { FiArrowDown, FiArrowRight } from "react-icons/fi";
 
 const Home = () => {
@@ -7,10 +8,9 @@ const Home = () => {
     <div className="home-container">
       <Navbar />
       <div className="home-banner-container">
-        
         <div className="home-text-section">
           <h1 className="primary-heading">
-            hokie housing, <strong>made simple.</strong>
+            hokie housing, made simple.
           </h1>
           <p className="primary-text">
             let's find the perfect housing situation for you!
