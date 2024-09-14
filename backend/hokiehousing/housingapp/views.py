@@ -20,7 +20,8 @@ def submit_quiz(request):
             living_learning_community = data["living_learning_community"],
             ac = data["ac"],
             public_transport = data["public_transport"],
-            desired_amenities = ["desired_amenities"],
+            desired_amenities = data["desired_amenities"],
+            furnished = data["furnished"],
             desired_bathrooms = data["desired_bathrooms"],
             desired_bedrooms = data["desired_bedrooms"],
             desired_distance_from_campus = data["desired_distance_from_campus"],
@@ -33,9 +34,13 @@ def submit_quiz(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 def get_apartment_listings(request):
+    
     pass
 
 def calculate_score(apartment, preferences):
+    importance = preferences.importance
+
+
     pass
 
 def get_apartment_details(request, apartment_id):
