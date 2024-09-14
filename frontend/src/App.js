@@ -1,9 +1,10 @@
 import './App.css';
+import Home from './components/home';
 
 function App() {
   return (
     <div className="App">
-      hokie housing, <strong>made simple.</strong>
+      <Home />
     </div>
   );
 }
