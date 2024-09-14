@@ -1,27 +1,27 @@
 import React from "react";
 import Navbar from "./navbar";
+import Quiz from "./quiz";
 import BannerBackground from "../assets/background.webp"
 import { FiArrowDown, FiArrowRight } from "react-icons/fi";
 
 const Home = () => {
   return (
     <div className="home-container">
-      <Navbar />
-      <div className="home-banner-container">
+        <Navbar />
+        <div className="home-banner-container">
         <div className="home-text-section">
-          <h1 className="primary-heading">
+            <h1 className="primary-heading">
             hokie housing, made simple.
-          </h1>
-          <p className="primary-text">
-            let's find the perfect housing situation for you!
-          </p>
-          <button className="secondary-button">
-            take the quiz <FiArrowDown />{" "}
-          </button>
+            </h1>
+            
+            <button className="secondary-button">
+            find your perfect housing situation <FiArrowDown />{" "}
+            </button>
         </div>
-        <div className="home-image-section">
-          
-        </div>
+        
+      </div>
+      <div className="divider">
+        <Quiz />
       </div>
     </div>
   );

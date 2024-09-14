@@ -2,6 +2,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif !important;
+  height: auto;
 }
 img {
   max-width: 100%;
@@ -15,6 +16,7 @@ img {
   max-width: 1900px;
   margin: 0;
 }
+
 body {
   max-width: 100%;
   overflow-x: hidden;
@@ -69,7 +71,7 @@ nav {
   align-items: center;
   padding-top: 3rem;
   width: 100%; /* Make sure it spans the full width */
-  height: 100vh; /* Set the desired height */
+  height: auto; /* Set the desired height */
   overflow: hidden; /* Hide any overflow */
 }
 .home-banner-container::before {
@@ -130,6 +132,8 @@ nav {
   justify-content: center;
   text-shadow: 1px 1px #000000;
   box-shadow: 1px 1px #000000;
+  margin-bottom: 15%;
+  margin-top: 4%;
 }
 .secondary-button svg {
   margin-left: 0.75rem;
@@ -570,4 +574,15 @@ nav {
   font-family: "Poppins", sans-serif;
   font-weight: 900;
   font-style: italic;
+}
+
+
+.quiz-container {
+  padding-top: 0;
+}
+
+.divider {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  background-color: #ccc;
 }
