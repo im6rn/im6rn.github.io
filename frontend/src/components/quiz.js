@@ -235,35 +235,45 @@ const QuizWithGUI = () => {
   // Function to submit answers via POST request
   const submitAnswers = () => {
     const postData = {
-        on_campus: answers.is_freshman === "Yes", // True if freshman, implying on-campus
-        //in_suite_bath: answers.room_style === "Suite-style" ? true : false,
-        desired_price: answers.desired_price !== undefined ? answers.desired_price : null,
-        utilities_included: answers.utilities_included !== undefined ? answers.utilities_included : null,
-        //living_learning_community: answers.living_learning_community || null,
-        airConditioning: answers.airConditioning !== undefined ? answers.airConditioning : null,
-        public_transport: answers.public_transit !== undefined ? answers.public_transit : null,
-        desired_amenities: answers.desired_amenities || [],
-        furnished: answers.furnished !== undefined ? answers.furnished : null,
-        desired_bathrooms: answers.desired_bathrooms !== undefined ? answers.desired_bathrooms : null,
-        desired_bedrooms: answers.desired_bedrooms !== undefined ? answers.desired_bedrooms : null,
-      };
-    // POST the structured data
-  fetch("http://localhost:8000/housingapp/quiz-submit/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(postData),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-        setUserToken(data.user_token);  
-        getListings(data.user_token);
+      on_campus: answers.is_freshman === "Yes", // True if freshman, implying on-campus
+      desired_price: answers.desired_price !== undefined ? answers.desired_price : null,
+      utilities_included: answers.utilities_included !== undefined ? answers.utilities_included : null,
+      airConditioning: answers.airConditioning !== undefined ? answers.airConditioning : null,
+      public_transport: answers.public_transit !== undefined ? answers.public_transit : null,
+      desired_amenities: answers.desired_amenities || [],
+      furnished: answers.furnished !== undefined ? answers.furnished : null,
+      desired_bathrooms: answers.desired_bathrooms !== undefined ? answers.desired_bathrooms : null,
+      desired_bedrooms: answers.desired_bedrooms !== undefined ? answers.desired_bedrooms : null,
+    };
+  
+    fetch("http://localhost:8000/housingapp/quiz-submit/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
     })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then(err => { throw err; });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status === 'success') {
+          setUserToken(data.user_token);  
+          getListings(data.user_token);
+        } else {
+          console.error("Server Error:", data.message);
+          // Optionally, set an error state to display to the user
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Optionally, set an error state to display to the user
+      });
   };
+  
 
   const currentQ = questions[currentQIndex];
 
@@ -320,16 +330,22 @@ const QuizWithGUI = () => {
     // When you ping the get_apartment_listings endpoint, pass the user_token via query parameter
   // Function to fetch listings from backend
   const getListings = (user_token) => {
-    fetch(`http://localhost:3000/backend/hokiehousing/housingapp/get-listings`)
-      .then((response) => response.json())
+    fetch(`http://localhost:8000/housingapp/get-listings/?user_token=${user_token}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         setListings(data);  // Set the listings in state
       })
       .catch((error) => {
         console.error("Error fetching listings:", error);
-        // You can set an error state here if needed
+        // Optionally, set an error state to display to the user
       });
   };
+  
   
   return (
     <div className="quiz-container" style={styles.quizContainer}>
@@ -391,21 +407,24 @@ const QuizWithGUI = () => {
           <h2>Based on your preferences, these are the best for you:</h2>
           {listings ? (
             listings.length > 0 ? (
-              <ul>
-                {listings.map((listing, index) => (
-                  <li key={index}>
-                    <h3>{listing.name}</h3>
-                    <p>{listing.description}</p>
-                    {/* Add more listing details as needed */}
-                  </li>
+                <ul>
+                {listings.map((listing) => (
+                    <li key={listing.apt_id} style={{ marginBottom: '20px', listStyleType: 'none' }}>
+                    <h3>Apt ID: {listing.apt_id}</h3>
+                    <p><strong>Square Feet:</strong> {listing.sq_ft}</p>
+                    <p><strong>Number of Rooms:</strong> {listing.num_rooms}</p>
+                    <p><strong>Number of Bathrooms:</strong> {listing.num_bathrooms}</p>
+                    <p><strong>Address:</strong> {listing.address}</p>
+                    </li>
                 ))}
-              </ul>
+                </ul>
             ) : (
-              <p>No listings found matching your preferences.</p>
+                <p>No listings found matching your preferences.</p>
             )
-          ) : (
+            ) : (
             <p>Loading listings...</p>
-          )}
+            )}
+
         </div>
       )}
     </div>
