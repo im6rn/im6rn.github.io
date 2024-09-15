@@ -16,49 +16,49 @@ const QuizWithGUI = () => {
   */
   const questions = [
     {
-        id: 1,
+        id: 0,
         question: "Are you a freshman?",
         options: ["Yes", "No"],
         type: "single",
-        key: "on_campus",
+        key: "is_freshman",
     },
     {
-        id: 2,
+        id: 1,
         question: "What's your desired price point?",
         options: ["<$500", "~$1000", "~$1500", "$2000+"],
         type: "single",
         key: "desired_price",
     },
     {
-        id: 3,
+        id: 2,
         question: "Do you want utilities included in the price?",
         options: ["Yes", "No"],
         type: "single",
         key: "utilities_included",
     },
     {
-        id: 4,
+        id: 3,
         question: "How many bedrooms do you want?",
         options: ["1", "2", "3", "4"],
         type: "single",
         key: "desired_bedrooms",
     },
     {
-        id: 5,
+        id: 4,
         question: "How many bathrooms do you want?",
         options: ["1", "2", "3", "4"],
         type: "single",
         key: "desired_bathrooms",
     },
     {
-        id: 6,
+        id: 5,
         question: "What amenities would you like?",
         options: [" Parking", " EV charger", " Gym", " Internet", " Animal-Friendly", " In-unit washer/dryer", " Balcony"],
         type: "multiple",
         key: "desired_amenities",
     },
     {
-        id: 7,
+        id: 6,
         question: "Do you need access to public transit?",
         options: ["Yes", "No"],
         type: "single",
@@ -66,42 +66,42 @@ const QuizWithGUI = () => {
     },
     /** ON CAMPUS QUESTIONS START HERE */
     {
-        id: 8,
+        id: 7,
         question: "Do you want air conditioning in your room?",
         options: ["Yes", "No"],
         type: "single",
         key: "ac",
     },
     {
-        id: 9,
+        id: 8,
         question: "Do you want to be in a traditional or suite-style room?",
         options: ["Traditional", "Suite-style"],
         type: "single",
         key: "room_style"
     },
     {
-        id: 10,
+        id: 9,
         question: "Would you like to be in a Living Learning Community?",
         options: ["Yes", "No"],
         type: "single",
         key: "living_learning_community",
     },
     {
-        id: 11,
+        id: 10,
         question: "Would you like to be in an academic LLC or identity LLC?",
         options: ["Academic", "Identity"],
         type: "single",
         key: "llc_type"
     },
     {
-        id: 12,
+        id: 11,
         question: "What type of academic LLC would you like to be in?",
         options: ["Honors", "Leadership", "IT", "Engineering", "Education", "Data Analytics", "Cybersecurity", "Entreprenurship", "Arts", "Language", "Sciences", "Major Exploration"],
         type: "single",
         key: "academic_llc_type"
     },
     {
-        id: 13,
+        id: 12,
         question: "What type of personal LLC would you like to be in?",
         options: ["Interfaith", "First-Gen", "Growth", "Global Perspectives", "LGBTQ+", "Well-Being", "Recovery", "Black Culture", "Transfer Students", "Fraternities", "Sororities"],
         type: "single",
@@ -110,29 +110,57 @@ const QuizWithGUI = () => {
   ];
 
   const handleAnswer = (answer) => {
-    const currentQuestion = questions[currentQIndex];
-    if (currentQuestion.id === 1) {
-        setAnswers({ ...answers, livingPreference: answer });
-        // Move to next question based on the user's living preference
-        if (answer === "Yes") {
-          // If on-campus, directly submit answers (or add custom on-campus questions)
-          setCurrentQIndex(8);
-        } else {
-          // Continue with the off-campus related questions
-          setCurrentQIndex(2);
-        }
-    }
-    setAnswers({
-      ...answers,
-      [currentQuestion.id]: answer,
-    });
-    const nextQIndex = currentQIndex + 1;
-    if (nextQIndex < questions.length) {
-      setCurrentQIndex(nextQIndex);
+  const currentQuestion = questions[currentQIndex];
+
+  // Save the answer to the current question
+  setAnswers({ ...answers, [currentQuestion.key]: answer });
+
+  let nextQIndex = currentQIndex + 1;
+
+  // Conditional logic based on current question
+  if (currentQuestion.id === 0) {
+    // First question: "Are you a freshman?"
+    if (answer === "Yes") {
+      // Freshmen live on-campus, skip to on-campus questions starting from id:7
+      nextQIndex = questions.findIndex((q) => q.id === 7);
     } else {
-      setIsCompleted(true);
+      // Not a freshman, proceed to off-campus questions
+      nextQIndex = currentQIndex + 1;
     }
-  };
+  } else if (currentQuestion.id === 6) {
+    setIsCompleted(true);
+    return;
+  }
+  else if (currentQuestion.id === 9) {
+    // Question: "Would you like to be in a Living Learning Community?"
+    if (answer === "No") {
+      // Skip LLC questions, end quiz
+      setIsCompleted(true);
+      return;
+    }
+  } else if (currentQuestion.id === 10) {
+    // Question: "Would you like to be in an academic LLC or identity LLC?"
+    if (answer === "Academic") {
+      // Proceed to academic LLC question
+      nextQIndex = questions.findIndex((q) => q.id === 11);
+    } else if (answer === "Identity") {
+      // Proceed to personal LLC question
+      nextQIndex = questions.findIndex((q) => q.id === 12);
+    }
+  } else if (currentQuestion.id === 11 || currentQuestion.id === 12) {
+    // After these questions, the quiz is completed
+    setIsCompleted(true);
+    return;
+  }
+
+  // Move to the next question or complete the quiz
+  if (nextQIndex < questions.length) {
+    setCurrentQIndex(nextQIndex);
+  } else {
+    setIsCompleted(true);
+  }
+};
+
   
 
   const currentQ = questions[currentQIndex];
