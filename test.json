@@ -1,0 +1,10 @@
+{
+    "is_freshman": "No",
+    "desired_price": "~$1000",
+    "utilities_included": "Yes",
+    "desired_bedrooms": "2",
+    "desired_bathrooms": "1",
+    "desired_amenities": ["Parking", "Gym"],
+    "public_transit": "Yes"
+  }
+  
