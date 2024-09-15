@@ -44,7 +44,21 @@ const QuizWithGUI = () => {
       key: "desired_bathrooms",
     },
     {
-      id: 5,
+        id: 5,
+        question: "Do you want it to come furnished?",
+        options: ["Yes", "No"],
+        type: "single",
+        key: "furnished",
+      },
+      {
+        id: 6,
+        question: "Do you want it to have A/C?",
+        options: ["Yes", "No"],
+        type: "single",
+        key: "airConditioning",
+      },
+    {
+      id: 7,
       question: "What amenities would you like?",
       options: [
         " Parking",
@@ -52,20 +66,20 @@ const QuizWithGUI = () => {
         " Gym",
         " Internet",
         " Animal-Friendly",
-        " In-unit washer/dryer",
+        " Washer/Dryer",
         " Balcony",
       ],
       type: "multiple",
       key: "desired_amenities",
     },
     {
-      id: 6,
+      id: 8,
       question: "Do you need access to public transit?",
       options: ["Yes", "No"],
       type: "single",
       key: "public_transit",
     },
-    /** ON CAMPUS QUESTIONS START HERE */
+    /** ON CAMPUS QUESTIONS START HERE
     {
       id: 7,
       question: "Do you want air conditioning in your room?",
@@ -133,15 +147,35 @@ const QuizWithGUI = () => {
       type: "single",
       key: "personal_llc_type",
     },
+    */
   ];
-
+ 
   const handleAnswer = (answer) => {
     const currentQuestion = questions[currentQIndex];
+
+    let formattedAnswer = answer;
+    if (answer === "Yes") {
+        formattedAnswer = true;
+    } else if (answer === "No") {
+        formattedAnswer = false;
+    }
+
+        // Convert numeric answers to integers (for price, bedrooms, bathrooms)
+    if (currentQuestion.key === "desired_price") {
+        // You can map price ranges to numeric values as needed
+        if (answer === "<$500") formattedAnswer = 500;
+        else if (answer === "~$1000") formattedAnswer = 1000;
+        else if (answer === "~$1500") formattedAnswer = 1500;
+        else if (answer === "$2000+") formattedAnswer = 2000;
+    } else if (currentQuestion.key === "desired_bedrooms" || currentQuestion.key === "desired_bathrooms") {
+            // Convert bedrooms/bathrooms to integer
+            formattedAnswer = parseInt(answer, 10);
+    }
 
     // Save the answer to the current question
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [currentQuestion.key]: answer,
+      [currentQuestion.key]: formattedAnswer,
     }));
 
     let nextQIndex = currentQIndex + 1;
@@ -151,12 +185,12 @@ const QuizWithGUI = () => {
       // First question: "Are you a freshman?"
       if (answer === "Yes") {
         // Freshmen live on-campus, skip to on-campus questions starting from id:7
-        nextQIndex = questions.findIndex((q) => q.id === 7);
+        /*nextQIndex = questions.findIndex((q) => q.id === 7);*/
       } else {
         // Not a freshman, proceed to off-campus questions
         nextQIndex = currentQIndex + 1;
       }
-    } else if (currentQuestion.id === 6) {
+    } else if (currentQuestion.id === 8 ) {
       setIsCompleted(true);
       return;
     } else if (currentQuestion.id === 9) {
@@ -199,21 +233,34 @@ const QuizWithGUI = () => {
 
   // Function to submit answers via POST request
   const submitAnswers = () => {
-    fetch("http://localhost:3000/backend/hokiehousing/housingapp/quiz-submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(answers),
+    const postData = {
+        on_campus: answers.is_freshman === "Yes", // True if freshman, implying on-campus
+        //in_suite_bath: answers.room_style === "Suite-style" ? true : false,
+        desired_price: answers.desired_price !== undefined ? answers.desired_price : null,
+        utilities_included: answers.utilities_included !== undefined ? answers.utilities_included : null,
+        //living_learning_community: answers.living_learning_community || null,
+        airConditioning: answers.airConditioning !== undefined ? answers.airConditioning : null,
+        public_transport: answers.public_transit !== undefined ? answers.public_transit : null,
+        desired_amenities: answers.desired_amenities || [],
+        furnished: answers.furnished !== undefined ? answers.furnished : null,
+        desired_bathrooms: answers.desired_bathrooms !== undefined ? answers.desired_bathrooms : null,
+        desired_bedrooms: answers.desired_bedrooms !== undefined ? answers.desired_bedrooms : null,
+      };
+    // POST the structured data
+  fetch("http://localhost:3000/backend/hokiehousing/housingapp/quiz-submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(postData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      setListings(data);
     })
-      .then((response) => response.json())
-      .then((data) => {
-        setListings(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // You can set an error state here if needed
-      });
+    .catch((error) => {
+      console.error("Error:", error);
+    });
   };
 
   const currentQ = questions[currentQIndex];

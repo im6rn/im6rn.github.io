@@ -54,24 +54,33 @@ sample_apts = [
 def submit_quiz(request):
     try:
         data = json.loads(request.body)
+        
+        # Check if the student is living on-campus or off-campus
+        on_campus = data.get('on_campus', False)
 
-        preferences = UserPreferences.objects.create(
-            on_campus = data['on_campus'],
-            in_suite_bath = data['in_suite_bath'],
-            desired_price = data["desired_price"],
-            max_price = data["max_price"],
-            utilities_included = data["utilities_included"],
-            living_learning_community = data["living_learning_community"],
-            ac = data["ac"],
-            public_transport = data["public_transport"],
-            desired_amenities = data["desired_amenities"],
-            furnished = data["furnished"],
-            desired_bathrooms = data["desired_bathrooms"],
-            desired_bedrooms = data["desired_bedrooms"],
-            desired_distance_from_campus = data["desired_distance_from_campus"],
-            max_distance_from_campus = data["max_distance_from_campus"],
-            importance = data["importance"]
-        )
+        if on_campus:
+            # On-campus: Use only relevant fields
+            preferences = UserPreferences.objects.create(
+                on_campus=True,
+                in_suite_bath=data.get('in_suite_bath'),
+                ac=data.get('ac'),
+                living_learning_community=data.get('living_learning_community', []),
+                # Add more on-campus specific fields
+            )
+        else:
+            # Off-campus: Use the off-campus relevant fields
+            preferences = UserPreferences.objects.create(
+                on_campus=False,
+                desired_price=data.get('desired_price'),
+                utilities_included=data.get('utilities_included'),
+                public_transport=data.get('public_transport'),
+                desired_amenities=data.get('desired_amenities', []),
+                furnished=data.get('furnished'),
+                desired_bathrooms=data.get('desired_bathrooms'),
+                desired_bedrooms=data.get('desired_bedrooms'),
+                desired_distance_from_campus=data.get('desired_distance_from_campus'),
+                # Add more off-campus specific fields
+            )
 
         return JsonResponse({'status': 'success', 'user_token': preferences.id})
     except Exception as e:
