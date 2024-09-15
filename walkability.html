@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walk Score Demo</title>
+  <style type='text/css'>
+    #ws-walkscore-tile {
+      position: relative;
+      text-align: left;
+    }
+    #ws-walkscore-tile * {
+      float: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Walk Score Widget</h1>
+
+  <!-- Walk Score Tile -->
+  <div id='ws-walkscore-tile'></div>
+
+  <!-- Walk Score Script -->
+  <script type='text/javascript'>
+    var ws_wsid = 'ge9adfd11cba94a11b828d7932746eb4a';
+    var ws_address = '1060 Lombard Street, San Francisco, CA';
+    var ws_format = 'wide';
+    var ws_width = '300';
+    var ws_height = '200';
+  </script>
+
+  <!-- Load Walk Score JS File -->
+  <script type='text/javascript' src='http://www.walkscore.com/tile/show-walkscore-tile.php'></script>
+
+</body>
+</html>
