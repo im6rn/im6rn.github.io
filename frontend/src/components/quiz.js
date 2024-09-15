@@ -302,7 +302,7 @@ const QuizWithGUI = () => {
         
         // Combine geocoded data
         const geocoded = geocodedListings.find((l) => parseInt(l.apt_id, 10) === parseInt(detailedListing.apt_id, 10));
-        if (geocoded && geocoded.latitude && geocoded.longitude) {
+        if (geocoded && typeof geocoded.latitude === 'number' && typeof geocoded.longitude === 'number') {
           setSelectedListing({
             ...detailedListing,
             latitude: geocoded.latitude,
@@ -319,7 +319,7 @@ const QuizWithGUI = () => {
             mapRef.current.setZoom(16); // Adjust zoom level as desired
           }
         } else {
-          console.error("Geocoded data not found for the selected listing.");
+          console.error("Geocoded data not found or invalid for the selected listing.");
           setDetailsError("Listing does not have valid coordinates.");
         }
       } else {
@@ -501,6 +501,7 @@ const QuizWithGUI = () => {
           {/* Listings Section */}
           <div className="listings" style={styles.listings}>
             <h2>Available Listings</h2>
+
             {geocodedListings.length > 0 ? (
               <ul style={{ padding: 0, listStyleType: 'none' }}>
                 {geocodedListings.map((listing) => (
@@ -526,15 +527,24 @@ const QuizWithGUI = () => {
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f8ff'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
+
                     aria-label={`View details for ${listing.address}`} // Accessibility: Descriptive label
                   >
+                    {/* Prominent Price Display */}
+                    <p style={{ margin: 0, fontSize: '24px', fontWeight: 'bold', color: '#28a745' }}>
+                        ${listing.price} / month
+                    </p>
+
+                    {/* Address */}
                     <p style={{ margin: 0, fontWeight: 'bold' }}>
                       {listing.address}
                     </p>
+
+                    {/* Sq Ft / Beds / Baths */}
                     <p style={{ margin: 0 }}>
                       {listing.sq_ft} Sq Ft, {listing.num_rooms} Beds, {listing.num_bathrooms} Baths
                     </p>
-                    
+
                     {/* Render Detailed Information */}
                     {selectedListing && parseInt(selectedListing.apt_id, 10) === parseInt(listing.apt_id, 10) && (
                       <div className="listing-details" style={styles.listingDetails}>
@@ -545,7 +555,6 @@ const QuizWithGUI = () => {
                         ) : (
                           <>
                             <p><strong>Distance from Campus:</strong> {selectedListing.distance_from_campus_miles} miles</p>
-                            <p><strong>Price per Month:</strong> ${selectedListing.price_per_month}</p>
                             <p><strong>Utilities Included:</strong> {selectedListing.utilities_included ? 'Yes' : 'No'}</p>
                             <p><strong>Furnished:</strong> {selectedListing.furnished ? 'Yes' : 'No'}</p>
                             <p><strong>Public Transit Access:</strong> {selectedListing.near_public_transport ? 'Yes' : 'No'}</p>
@@ -568,7 +577,7 @@ const QuizWithGUI = () => {
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={
-                  selectedListing && selectedListing.latitude && selectedListing.longitude
+                  selectedListing && typeof selectedListing.latitude === 'number' && typeof selectedListing.longitude === 'number'
                     ? { lat: selectedListing.latitude, lng: selectedListing.longitude }
                     : defaultCenter
                 }
@@ -577,7 +586,7 @@ const QuizWithGUI = () => {
               >
                 {/* Render Markers */}
                 {geocodedListings.map((listing) => (
-                  listing.latitude && listing.longitude && (
+                  listing.latitude !== null && listing.longitude !== null && (
                     <Marker
                       key={listing.apt_id}
                       position={{ lat: listing.latitude, lng: listing.longitude }}
