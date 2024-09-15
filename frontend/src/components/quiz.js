@@ -193,6 +193,7 @@ const QuizWithGUI = () => {
   useEffect(() => {
     if (isCompleted) {
       submitAnswers();
+      getListings();
     }
   }, [isCompleted]);
 
@@ -267,6 +268,19 @@ const QuizWithGUI = () => {
     },
   };
 
+  // Function to fetch listings from backend
+    const getListings = () => {
+    fetch("http://localhost:3000/backend/hokiehousing/housingapp/get-listings")
+        .then((response) => response.json())
+        .then((data) => {
+        setListings(data); // Set the listings in state
+        })
+        .catch((error) => {
+        console.error("Error fetching listings:", error);
+        // You can set an error state here if needed
+        });
+    };
+  
   return (
     <div className="quiz-container" style={styles.quizContainer}>
       {!isCompleted ? (
