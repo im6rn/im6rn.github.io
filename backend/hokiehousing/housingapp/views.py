@@ -50,7 +50,7 @@ def get_apartment_listings(request):
 
             response.append(tn)
         
-        JsonResponse({"status": "success", "content": response}, safe = False)
+        return JsonResponse({"status": "success", "content": response}, safe = False)
 
 
 
