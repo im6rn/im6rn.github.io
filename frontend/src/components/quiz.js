@@ -10,8 +10,8 @@ const QuizWithGUI = () => {
   const questions = [
     {
       id: 0,
-      question: "Are you a freshman?",
-      options: ["Yes", "No"],
+      question: "Ready to begin?",
+      options: ["Yes"],
       type: "single",
       key: "is_freshman",
     },
@@ -235,7 +235,7 @@ const QuizWithGUI = () => {
   // Function to submit answers via POST request
   const submitAnswers = () => {
     const postData = {
-      on_campus: answers.is_freshman === "Yes", // True if freshman, implying on-campus
+      on_campus: answers.is_freshman, // True if freshman, implying on-campus
       desired_price: answers.desired_price !== undefined ? answers.desired_price : null,
       utilities_included: answers.utilities_included !== undefined ? answers.utilities_included : null,
       airConditioning: answers.airConditioning !== undefined ? answers.airConditioning : null,
@@ -338,7 +338,7 @@ const QuizWithGUI = () => {
         return response.json();
       })
       .then((data) => {
-        setListings(data);  // Set the listings in state
+        setListings(data.content);  // Set the listings in state
       })
       .catch((error) => {
         console.error("Error fetching listings:", error);
@@ -404,17 +404,17 @@ const QuizWithGUI = () => {
         </div>
       ) : (
         <div className="completion-message" style={styles.completionMessage}>
-          <h2>Based on your preferences, these are the best for you:</h2>
+          <h2 className="preferences">Based on your preferences, these are the best for you:</h2>
           {listings ? (
             listings.length > 0 ? (
                 <ul>
                 {listings.map((listing) => (
                     <li key={listing.apt_id} style={{ marginBottom: '20px', listStyleType: 'none' }}>
-                    <h3>Apt ID: {listing.apt_id}</h3>
+                    <p><strong>Address:</strong> {listing.address}</p>
                     <p><strong>Square Feet:</strong> {listing.sq_ft}</p>
                     <p><strong>Number of Rooms:</strong> {listing.num_rooms}</p>
                     <p><strong>Number of Bathrooms:</strong> {listing.num_bathrooms}</p>
-                    <p><strong>Address:</strong> {listing.address}</p>
+                    
                     </li>
                 ))}
                 </ul>
