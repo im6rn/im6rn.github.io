@@ -282,7 +282,10 @@ const handleListingClick = async (listing) => {
       setActiveMarker(null); // Close the marker's info window
       return; // Exit early to avoid fetching details again
     }
-  
+    
+    setActiveMarker(null);
+    setSelectedListing(null);
+
     // Otherwise, fetch the details of the newly clicked listing
     setDetailsLoading(true);
     setDetailsError(null);
