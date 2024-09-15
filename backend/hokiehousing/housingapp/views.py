@@ -55,7 +55,7 @@ def get_apartment_listings(request):
 
         sorted_response = sorted(response, key=lambda x: x['rating'], reverse=True)
         
-        return JsonResponse({"status": "success", "content": response}, safe = False)
+        return JsonResponse({"status": "success", "content": sorted_response}, safe = False)
 
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
