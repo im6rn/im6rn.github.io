@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 
 const QuizWithGUI = () => {
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [listings, setListings] = useState(null);
+  const [listings, setListings] = useState([]); // Initialized as empty array
   const [answers, setAnswers] = useState({});
   const [multiSelectAnswers, setMultiSelectAnswers] = useState([]);
   const [userToken, setUserToken] = useState(null);
@@ -11,6 +12,7 @@ const QuizWithGUI = () => {
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState(null);
   const [error, setError] = useState(null); // Optional: For error handling
+  const [activeMarker, setActiveMarker] = useState(null);
 
   const questions = [
     {
@@ -66,13 +68,13 @@ const QuizWithGUI = () => {
       id: 7,
       question: "What amenities would you like?",
       options: [
-        " Parking",
-        " EV charger",
-        " Gym",
-        " Internet",
-        " Animal-Friendly",
-        " Washer/Dryer",
-        " Balcony",
+        "Parking",
+        "EV charger",
+        "Gym",
+        "Internet",
+        "Animal-Friendly",
+        "Washer/Dryer",
+        "Balcony",
       ],
       type: "multiple",
       key: "desired_amenities",
@@ -122,35 +124,7 @@ const QuizWithGUI = () => {
 
     let nextQIndex = currentQIndex + 1;
 
-    // Conditional logic based on current question
-    if (currentQuestion.id === 0) {
-      // First question: "Ready to begin?"
-      // Assuming 'is_freshman' is a generic flag; adjust if needed
-      // Currently, no conditional logic here
-    } else if (currentQuestion.id === 8) {
-      setIsCompleted(true);
-      return;
-    } else if (currentQuestion.id === 9) {
-      // Question: "Would you like to be in a Living Learning Community?"
-      if (formattedAnswer === false) {
-        // Skip LLC questions, end quiz
-        setIsCompleted(true);
-        return;
-      }
-    } else if (currentQuestion.id === 10) {
-      // Question: "Would you like to be in an academic LLC or identity LLC?"
-      if (formattedAnswer === "Academic") {
-        // Proceed to academic LLC question
-        nextQIndex = questions.findIndex((q) => q.id === 11);
-      } else if (formattedAnswer === "Identity") {
-        // Proceed to personal LLC question
-        nextQIndex = questions.findIndex((q) => q.id === 12);
-      }
-    } else if (currentQuestion.id === 11 || currentQuestion.id === 12) {
-      // After these questions, the quiz is completed
-      setIsCompleted(true);
-      return;
-    }
+    // Removed conditional logic for non-existent questions (id 9-12)
 
     // Move to the next question or complete the quiz
     if (nextQIndex < questions.length) {
@@ -235,7 +209,7 @@ const QuizWithGUI = () => {
         return response.json();
       })
       .then((data) => {
-        setListings(data.content); // Set the listings in state
+        setListings(data.content || []); // Ensure listings is an array
       })
       .catch((error) => {
         console.error("Error fetching listings:", error);
@@ -244,12 +218,19 @@ const QuizWithGUI = () => {
   };
 
   // Function to fetch detailed information for a selected listing
-  const handleListingClick = (apt_id) => {
+  const handleListingClick = (listing) => {
+    // If the clicked listing is already selected, close it by setting selectedListing to null
+    if (selectedListing && selectedListing.apt_id === listing.apt_id) {
+      setSelectedListing(null); // Close the details
+      setActiveMarker(null); // Close the marker's info window
+      return; // Exit early to avoid fetching details again
+    }
+
+    // Otherwise, fetch the details of the newly clicked listing
     setDetailsLoading(true);
     setDetailsError(null);
-    setSelectedListing(null);
 
-    fetch(`http://localhost:8000/housingapp/get-details/?apt_id=${apt_id}`)
+    fetch(`http://localhost:8000/housingapp/get-details/?apt_id=${listing.apt_id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
@@ -257,7 +238,13 @@ const QuizWithGUI = () => {
         return response.json();
       })
       .then((data) => {
-        setSelectedListing(data);
+        console.log('API Response:', data); // For debugging
+        if (data.status === "success") {
+          setSelectedListing(data.content); // Set the selected listing details
+          setActiveMarker(listing.apt_id); // Open the marker's info window
+        } else {
+          setDetailsError(data.message || "Failed to load listing details.");
+        }
         setDetailsLoading(false);
       })
       .catch((error) => {
@@ -269,6 +256,16 @@ const QuizWithGUI = () => {
 
   const currentQ = questions[currentQIndex];
 
+  const mapContainerStyle = {
+    width: '100%',
+    height: '100%',
+  };
+
+  const defaultCenter = {
+    lat: 37.2296, // Example: Blacksburg, VA coordinates
+    lng: -80.4139,
+  };
+
   const styles = {
     quizContainer: {
       display: "flex",
@@ -278,6 +275,30 @@ const QuizWithGUI = () => {
       minHeight: "100vh",
       backgroundColor: "#F4F4F9",
       padding: "20px",
+    },
+    resultsContainer: {
+      display: "flex",
+      flexDirection: "row",
+      width: "100%",
+      maxWidth: "1200px",
+      gap: "20px",
+    },
+    listings: {
+      flex: "1",
+      overflowY: "auto",
+      maxHeight: "80vh",
+      paddingRight: "10px",
+      border: "1px solid #ccc",
+      borderRadius: "8px",
+      padding: "10px",
+      backgroundColor: "#ffffff",
+    },
+    map: {
+      flex: "1",
+      height: "80vh",
+      border: "1px solid #ccc",
+      borderRadius: "8px",
+      overflow: "hidden",
     },
     questionCard: {
       backgroundColor: "#ffffff",
@@ -296,6 +317,7 @@ const QuizWithGUI = () => {
       display: "flex",
       flexDirection: "column",
       gap: "10px",
+      alignItems: "center",
     },
     optionButton: {
       padding: "10px 20px",
@@ -306,6 +328,8 @@ const QuizWithGUI = () => {
       color: "white",
       cursor: "pointer",
       transition: "background-color 0.3s ease",
+      width: "100%",
+      maxWidth: "300px",
     },
     optionButtonHover: {
       backgroundColor: "#0056b3",
@@ -317,6 +341,26 @@ const QuizWithGUI = () => {
       backgroundColor: "#d4edda",
       borderRadius: "8px",
     },
+    listingDetails: {
+      marginTop: '10px',
+      padding: '10px',
+      border: '1px solid #ccc',
+      borderRadius: '5px',
+      backgroundColor: '#f9f9f9',
+    },
+    addressButton: {
+      background: 'none',
+      border: 'none',
+      color: '#007bff',
+      textDecoration: 'underline',
+      cursor: 'pointer',
+      padding: 0,
+      font: 'inherit',
+      fontSize: '16px',
+    },
+    infoWindowContent: {
+      maxWidth: '200px',
+    },
   };
 
   return (
@@ -324,14 +368,14 @@ const QuizWithGUI = () => {
       {!isCompleted ? (
         <div className="question-card" style={styles.questionCard}>
           <h2 style={styles.questionText}>{currentQ.question}</h2>
-          <div className="options" style={styles.optionsContainer}>
+          <div className="options-container" style={styles.optionsContainer}>
             {currentQ.type === "multiple" ? (
               <>
                 {currentQ.options.map((option, index) => (
-                  <label key={index}>
+                  <label key={index} style={{ alignSelf: "flex-start" }}>
                     <input
                       type="checkbox"
-                      value={option}
+                      value={option.trim()}
                       checked={multiSelectAnswers.includes(option.trim())}
                       onChange={(e) => {
                         if (e.target.checked) {
@@ -347,8 +391,9 @@ const QuizWithGUI = () => {
                           );
                         }
                       }}
+                      style={{ marginRight: "10px" }}
                     />
-                    {option}
+                    {option.trim()}
                   </label>
                 ))}
                 <button
@@ -375,37 +420,25 @@ const QuizWithGUI = () => {
           </div>
         </div>
       ) : (
-        <div className="completion-message" style={styles.completionMessage}>
-          <h2 className="preferences">
-            Based on your preferences, these are the best for you:
-          </h2>
-          {error && <p style={{ color: 'red' }}>Error: {error}</p>} {/* Optional: Display error */}
-          {listings ? (
-            listings.length > 0 ? (
-              <ul>
+        <div className="results-container" style={styles.resultsContainer}>
+          <div className="listings" style={styles.listings}>
+            <h2>Available Listings</h2>
+            {listings.length > 0 ? (
+              <ul style={{ padding: 0, listStyleType: 'none' }}>
                 {listings.map((listing) => (
                   <li
                     key={listing.apt_id}
                     style={{
                       marginBottom: '20px',
-                      listStyleType: 'none',
-                      borderBottom: '1px solid #ccc',
-                      paddingBottom: '10px',
+                      padding: '10px',
+                      borderBottom: '1px solid #eee',
                     }}
                   >
                     <p>
-                      <strong>Address: </strong> 
-                      <button 
-                        onClick={() => handleListingClick(listing.apt_id)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#007bff',
-                          textDecoration: 'underline',
-                          cursor: 'pointer',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
+                      <strong>Address: </strong>
+                      <button
+                        onClick={() => handleListingClick(listing)}
+                        style={styles.addressButton}
                       >
                         {listing.address}
                       </button>
@@ -416,18 +449,18 @@ const QuizWithGUI = () => {
                     
                     {/* Render Detailed Information */}
                     {selectedListing && selectedListing.apt_id === listing.apt_id && (
-                      <div className="listing-details" style={{ marginTop: '10px', padding: '10px', border: '1px solid #ccc' }}>
+                      <div className="listing-details" style={styles.listingDetails}>
                         {detailsLoading ? (
                           <p>Loading details...</p>
                         ) : detailsError ? (
                           <p style={{ color: 'red' }}>{detailsError}</p>
                         ) : (
                           <>
-                            <p><strong>Distance:</strong> {selectedListing.distance} miles</p>
-                            <p><strong>Price:</strong> ${selectedListing.price}</p>
-                            <p><strong>Utilities Included:</strong> {selectedListing.utilities ? 'Yes' : 'No'}</p>
+                            <p><strong>Distance from Campus:</strong> {selectedListing.distance_from_campus_miles} miles</p>
+                            <p><strong>Price per Month:</strong> ${selectedListing.price_per_month}</p>
+                            <p><strong>Utilities Included:</strong> {selectedListing.utilities_included ? 'Yes' : 'No'}</p>
                             <p><strong>Furnished:</strong> {selectedListing.furnished ? 'Yes' : 'No'}</p>
-                            <p><strong>Public Transit Access:</strong> {selectedListing.public_transit ? 'Yes' : 'No'}</p>
+                            <p><strong>Public Transit Access:</strong> {selectedListing.near_public_transport ? 'Yes' : 'No'}</p>
                             <p><strong>Amenities:</strong> {selectedListing.amenities.join(', ')}</p>
                           </>
                         )}
@@ -438,10 +471,39 @@ const QuizWithGUI = () => {
               </ul>
             ) : (
               <p>No listings found matching your preferences.</p>
-            )
-          ) : (
-            <p>Loading listings...</p>
-          )}
+            )}
+          </div>
+          <div className="map" style={styles.map}>
+            <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={
+                  selectedListing
+                    ? { lat: selectedListing.latitude, lng: selectedListing.longitude }
+                    : defaultCenter
+                }
+                zoom={selectedListing ? 14 : 12}
+              >
+                {listings.map((listing) => (
+                  <Marker
+                    key={listing.apt_id}
+                    position={{ lat: listing.latitude, lng: listing.longitude }}
+                    onClick={() => handleListingClick(listing)}
+                  >
+                    {activeMarker === listing.apt_id && (
+                      <InfoWindow onCloseClick={() => setActiveMarker(null)}>
+                        <div style={styles.infoWindowContent}>
+                          <h3>{listing.address}</h3>
+                          <p>Price: ${listing.price_per_month}</p>
+                          {/* Add more details if desired */}
+                        </div>
+                      </InfoWindow>
+                    )}
+                  </Marker>
+                ))}
+              </GoogleMap>
+            </LoadScript>
+          </div>
         </div>
       )}
     </div>
