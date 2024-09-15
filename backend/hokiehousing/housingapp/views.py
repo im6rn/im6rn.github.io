@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -31,7 +32,9 @@ def get_apartment_listings(request):
     try:
         preferences = UserPreferences.objects.get(id=user_id)
 
-        with open("apt_data.json", 'r') as file:
+        file_path = settings.BASE_DIR / 'housingapp' / 'apt_data.json'
+
+        with open(file_path, 'r') as file:
             data = json.load(file)
 
         response = []
