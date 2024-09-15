@@ -26,6 +26,34 @@ def submit_quiz(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 def get_apartment_listings(request):
+    user_id = request.GET.get("user_token")
+
+    try:
+        preferences = UserPreferences.objects.get(id=user_id)
+
+        with open("apt_data.json", 'r') as file:
+            data = json.load(file)
+
+        response = []
+
+        for apt in data:
+            tn = {
+                "apt_id": apt["apt_id"],
+                "sq_ft": apt["sq_ft"],
+                "num_rooms": apt["num_rooms"],
+                "num_bathrooms": apt["num_bathrooms"],
+                "address": apt["address"]
+            }
+
+            response.append(tn)
+        
+        JsonResponse({"status": "success", "content": response}, safe = False)
+
+
+
+    
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
     
     pass

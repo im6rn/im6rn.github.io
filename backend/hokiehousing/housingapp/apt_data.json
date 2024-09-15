@@ -1,5 +1,6 @@
 [
     {
+        "apt_id": 1,
         "address": "404 Clay St SW #3, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 0.7,
@@ -14,6 +15,7 @@
         "amenities": ["Washer/Dryer", "Allows Pets", "Parking"]
     },
     {
+        "apt_id": 2,
         "address": "722 E Roanoke St APT 6, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 1.4,
@@ -28,6 +30,7 @@
         "amenities": ["Washer/Dryer", "Allowed Pets", "Parking", "Non-Smoking", "Trash and lawn care"]
     },
     {
+        "apt_id": 3,
         "address": "806 S Main St APT 4, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 1.2,
@@ -42,6 +45,7 @@
         "amenities": ["Washer/Dryer", "Allows Pets", "Parking"]
     },
     {
+        "apt_id": 4,
         "address": "1222 Patrick Henry Dr, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 1.9,
@@ -56,6 +60,7 @@
         "amenities": ["Washer/Dryer", "Gym", "Pool", "Balcony", "Parking", "Pets Allowed"]
     },
     {
+        "apt_id": 5,
         "address": "702 Progress St NE, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 1,
@@ -70,6 +75,7 @@
         "amenities": ["Washer/Dryer", "Gym", "Pool", "Parking", "Pets Allowed"]
     },
     {
+        "apt_id": 6,
         "address": "1700 Liberty Ln, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 2.5,
@@ -84,6 +90,7 @@
         "amenities": ["Pets Allowed", "Washer/Dryer", "Parking"]
     },
     {
+        "apt_id": 7,
         "address": "200 Hampton Ct, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 2.3,
@@ -98,6 +105,7 @@
         "amenities": ["Washer/Dryer", "Parking"]
     },
     {
+        "apt_id": 8,
         "address": "750 Hethwood Blvd NW, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 2.8,
@@ -112,6 +120,7 @@
         "amenities": ["Washer/Dryer", "Parking"]
     },
     {
+        "apt_id": 9,
         "address": "413 Hunt Club Rd, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 2.8,
@@ -126,6 +135,7 @@
         "amenities": ["Washer/Dryer", "Parking", "Pets Allowed"]
     },
     {
+        "apt_id": 10,
         "address": "2100 Foxhunt Ln APT E, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 3,
@@ -140,6 +150,7 @@
         "amenities": ["Washer/Dryer", "Parking", "Pets Allowed", "Pool", "Gym"]
     },
     {
+        "apt_id": 11,
         "address": "1208 University Ter, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 1.5,
@@ -154,6 +165,7 @@
         "amenities": ["Washer/Dryer", "Appliances", "Parking"]
     },
     {
+        "apt_id": 12,
         "address": "1605 Lark Ln, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 1.9,
@@ -168,6 +180,7 @@
         "amenities": ["Washer/Dryer", "Parking", "Pets Allowed"]
     },
     {
+        "apt_id": 13,
         "address": "300 Dr Apt Heights, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 1.2,
@@ -182,6 +195,7 @@
         "amenities": ["Washer/Dryer", "Parking", "Pets Allowed"]
     },
     {
+        "apt_id": 14,
         "address": "400 Fairfax Rd, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 2.9,
@@ -196,6 +210,7 @@
         "amenities": ["Washer/Dryer", "Parking", "Pets Allowed"]
     },
     {
+        "apt_id": 15,
         "address": "535 Blackrock Dr, Blacksburg, VA 24060",
         "on_or_off_campus": "Off Campus",
         "distance_from_campus_miles": 2.9,
