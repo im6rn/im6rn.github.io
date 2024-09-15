@@ -129,7 +129,7 @@ def calculate_score(apartment, preferences):
     return min(round(score/10, 2), max_score)
 
 
-def get_apartment_details(request, apartment_id):
+def get_apartment_details(request):
     apt_id = request.GET.get("apt_id")
 
     file_path = settings.BASE_DIR / 'housingapp' / 'apt_data.json'
@@ -137,7 +137,7 @@ def get_apartment_details(request, apartment_id):
     with open(file_path, 'r') as file:
         data = json.load(file)
 
-    apt_search = [ apt for apt in data if apt['apt_id'] == apt_id ]
+    apt_search = [ apt for apt in data if int(apt['apt_id']) == int(apt_id) ]
 
     return JsonResponse({"status": "success", "content": apt_search[0]}, safe = False)
 
