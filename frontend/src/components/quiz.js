@@ -231,6 +231,7 @@ const QuizWithGUI = () => {
     }
   }, [isCompleted]);
 
+
   // Function to submit answers via POST request
   const submitAnswers = () => {
     const postData = {
@@ -256,7 +257,8 @@ const QuizWithGUI = () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      setListings(data);
+        setUserToken(data.user_token);  
+        getListings(data.user_token);
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -314,19 +316,20 @@ const QuizWithGUI = () => {
       borderRadius: "8px",
     },
   };
-
+  const [userToken, setUserToken] = useState(null);
+    // When you ping the get_apartment_listings endpoint, pass the user_token via query parameter
   // Function to fetch listings from backend
-    const getListings = () => {
-    fetch("http://localhost:3000/backend/hokiehousing/housingapp/get-listings")
-        .then((response) => response.json())
-        .then((data) => {
-        setListings(data); // Set the listings in state
-        })
-        .catch((error) => {
+  const getListings = (user_token) => {
+    fetch(`http://localhost:3000/backend/hokiehousing/housingapp/get-listings?user_token=${user_token}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setListings(data);  // Set the listings in state
+      })
+      .catch((error) => {
         console.error("Error fetching listings:", error);
         // You can set an error state here if needed
-        });
-    };
+      });
+  };
   
   return (
     <div className="quiz-container" style={styles.quizContainer}>
