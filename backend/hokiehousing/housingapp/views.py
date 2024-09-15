@@ -62,11 +62,80 @@ def get_apartment_listings(request):
     pass
 
 def calculate_score(apartment, preferences):
-    importance = preferences.importance
+    score = 0
+    max_score = 100  # Set a base maximum score for scaling
 
+    # Define weights for each criterion
+    weights = {
+        'price': 30,
+        'utilities': 10,
+        'bedrooms': 15,
+        'bathrooms': 10,
+        'amenities': 20,
+        'public_transit': 10,
+        'ac': 5,
+    }
 
-    pass
+    # Normalize price (closer to desired price, higher the score)
+    price_difference = abs(preferences.desired_price - apartment['price_per_month'])
+    max_price_difference = max(preferences.desired_price, apartment['price_per_month'])
+    price_score = max(0, (1 - price_difference / max_price_difference)) * weights['price']
+    score += price_score
+
+    # Utilities check (exact match gets full weight)
+    utilities_score = weights['utilities'] if apartment['utilities_included'] == preferences.utilities else 0
+    score += utilities_score
+
+    # Bedrooms check (more or equal bedrooms gets full weight)
+    if apartment['num_rooms'] >= preferences.bedrooms:
+        bedrooms_score = weights['bedrooms']
+    else:
+        bedrooms_score = (apartment['num_rooms'] / preferences.bedrooms) * weights['bedrooms']
+    score += bedrooms_score
+
+    # Bathrooms check (same as bedrooms logic)
+    if apartment['num_bathrooms'] >= preferences.bathrooms:
+        bathrooms_score = weights['bathrooms']
+    else:
+        bathrooms_score = (apartment['num_bathrooms'] / preferences.bathrooms) * weights['bathrooms']
+    score += bathrooms_score
+
+    # Amenities check (count how many desired amenities are met)
+    desired_amenities = set(preferences.amenities)
+    available_amenities = set(apartment['amenities'])
+    matching_amenities = desired_amenities.intersection(available_amenities)
+    amenities_score = (len(matching_amenities) / len(desired_amenities)) * weights['amenities'] if desired_amenities else 0
+    score += amenities_score
+
+    # Public transport (if matches user preference)
+    if apartment['near_public_transport'] == preferences.public_transit:
+        public_transit_score = weights['public_transit']
+    else:
+        public_transit_score = 0
+    score += public_transit_score
+
+    # Air conditioning check (if AC is important to the user, full score for having AC)
+    if apartment['has_ac']:
+        ac_score = weights['ac']
+    else:
+        ac_score = 0
+    score += ac_score
+
+    # Final score calculation scaled to 1-100
+    return min(round(score/10, 2), max_score)
+
 
 def get_apartment_details(request, apartment_id):
-    pass
+    apt_id = request.GET.get("apt_id")
+
+    file_path = settings.BASE_DIR / 'housingapp' / 'apt_data.json'
+
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+
+    apt_search = [ apt for apt in data if apt['apt_id'] == apt_id ]
+
+    return JsonResponse({"status": "success", "content": apt_search[0]}, safe = False)
+
+    
 
