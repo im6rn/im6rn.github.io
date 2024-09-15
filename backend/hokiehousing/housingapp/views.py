@@ -6,6 +6,8 @@ import json
 
 from .models import UserPreferences
 
+
+
 @csrf_exempt
 def submit_quiz(request):
     try:
@@ -34,6 +36,7 @@ def submit_quiz(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 def get_apartment_listings(request):
+
     
     pass
 
