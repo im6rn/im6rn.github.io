@@ -395,7 +395,9 @@ nav {
     padding-top: 10%;
     width: 100%; /* Ensure it takes full width */
   }
-  
+  .results-container {
+    max-width: 90%;
+  }
   .about-section-text-container {
     justify-content: center;
     align-items: center;
