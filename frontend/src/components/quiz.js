@@ -435,7 +435,6 @@ const QuizWithGUI = () => {
                     }}
                   >
                     <p>
-                      <strong>Address: </strong>
                       <button
                         onClick={() => handleListingClick(listing)}
                         style={styles.addressButton}
@@ -443,9 +442,10 @@ const QuizWithGUI = () => {
                         {listing.address}
                       </button>
                     </p>
-                    <p><strong>Square Feet:</strong> {listing.sq_ft}</p>
-                    <p><strong>Number of Rooms:</strong> {listing.num_rooms}</p>
-                    <p><strong>Number of Bathrooms:</strong> {listing.num_bathrooms}</p>
+
+
+                    <p>{listing.sq_ft} Sq Ft, {listing.num_rooms} Beds, {listing.num_bathrooms} Baths</p>
+                    <p>{listing.address}</p>
                     
                     {/* Render Detailed Information */}
                     {selectedListing && selectedListing.apt_id === listing.apt_id && (
@@ -474,7 +474,7 @@ const QuizWithGUI = () => {
             )}
           </div>
           <div className="map" style={styles.map}>
-            <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+            <LoadScript googleMapsApiKey={"AIzaSyCj8UmwW_QrcP0-rLEWH3sB1L1n6sZVE1I"}>
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={

@@ -43,6 +43,7 @@ def get_apartment_listings(request):
 
             tn = {
                 "apt_id": apt["apt_id"],
+                "price": apt["price_per_month"],
                 "sq_ft": apt["sq_ft"],
                 "num_rooms": apt["num_rooms"],
                 "num_bathrooms": apt["num_bathrooms"],
@@ -56,9 +57,6 @@ def get_apartment_listings(request):
         
         return JsonResponse({"status": "success", "content": response}, safe = False)
 
-
-
-    
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
