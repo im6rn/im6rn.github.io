@@ -248,7 +248,7 @@ const QuizWithGUI = () => {
         desired_bedrooms: answers.desired_bedrooms !== undefined ? answers.desired_bedrooms : null,
       };
     // POST the structured data
-  fetch("http://localhost:3000/backend/hokiehousing/housingapp/quiz-submit", {
+  fetch("http://localhost:8000/housingapp/quiz-submit/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
