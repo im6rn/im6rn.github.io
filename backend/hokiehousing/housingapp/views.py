@@ -6,7 +6,49 @@ import json
 
 from .models import UserPreferences
 
-
+sample_apts = [
+    {
+        "complex": "Halstead Fair Oaks",
+        "address": "4576 Hunt Club Circle, Fairfax, VA 22033",
+        "on_campus": False,
+        "in_suite_bath": True,
+        "price": 2200,
+        "utilities_included": True,
+        "living_learning_community": [],
+        'ac': True,
+        "public_transport": True,
+        "amenities": [
+            "pool",
+            "washer/dryer",
+            "trash"
+        ],
+        "furnished": False,
+        "bathrooms": 2,
+        "bedrooms": 2,
+        "distance_from_campus": 5
+    },
+    {
+        "complex": "The Knoll at Fair Oaks",
+        "address": "5555 Pender Creek Circle, Fairfax, VA 22033",
+        "on_campus": False,
+        "in_suite_bath": True,
+        "price": 2900,
+        "utilities_included": True,
+        "living_learning_community": [],
+        'ac': True,
+        "public_transport": True,
+        "amenities": [
+            "pool",
+            "washer/dryer",
+            "trash",
+            "mewhenthe"
+        ],
+        "furnished": False,
+        "bathrooms": 2,
+        "bedrooms": 3,
+        "distance_from_campus": 7
+    }
+]
 
 @csrf_exempt
 def submit_quiz(request):

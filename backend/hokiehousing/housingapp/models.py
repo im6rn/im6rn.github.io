@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -10,12 +9,12 @@ class UserPreferences(models.Model):
     desired_price = models.IntegerField()
     utilities_included = models.BooleanField(default=False)
 
-    living_learning_community = ArrayField(models.CharField(max_length=255), default=list)
+    living_learning_community = models.JSONField(default=list)
 
     ac = models.BooleanField(default=False)
     public_transport = models.BooleanField(default=False)
 
-    desired_amenities = ArrayField(models.CharField(max_length=255), default=list)
+    desired_amenities = models.JSONField(default=list)
 
     furnished = models.BooleanField(default=False)
     desired_bedrooms = models.IntegerField()
