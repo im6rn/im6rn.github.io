@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from "react";
+// QuizWithGUI.js
+
+import React, { useState, useEffect, useRef } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 
 const QuizWithGUI = () => {
+  // State Variables
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [listings, setListings] = useState([]); // Initialized as empty array
+  const [listings, setListings] = useState([]); // Original listings from API
+  const [geocodedListings, setGeocodedListings] = useState([]); // Listings with lat/lng
   const [answers, setAnswers] = useState({});
   const [multiSelectAnswers, setMultiSelectAnswers] = useState([]);
   const [userToken, setUserToken] = useState(null);
   const [selectedListing, setSelectedListing] = useState(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState(null);
-  const [error, setError] = useState(null); // Optional: For error handling
+  const [error, setError] = useState(null); // For general errors
   const [activeMarker, setActiveMarker] = useState(null);
 
+  // Ref for the map instance
+  const mapRef = useRef(null);
+
+  // Callback to set the map instance when loaded
+  const onMapLoad = (map) => {
+    mapRef.current = map;
+  };
+
+  // Quiz Questions
   const questions = [
     {
       id: 0,
@@ -91,6 +104,7 @@ const QuizWithGUI = () => {
     */
   ];
 
+  // Handle Answer Selection
   const handleAnswer = (answer) => {
     const currentQuestion = questions[currentQIndex];
 
@@ -124,8 +138,6 @@ const QuizWithGUI = () => {
 
     let nextQIndex = currentQIndex + 1;
 
-    // Removed conditional logic for non-existent questions (id 9-12)
-
     // Move to the next question or complete the quiz
     if (nextQIndex < questions.length) {
       setCurrentQIndex(nextQIndex);
@@ -134,15 +146,15 @@ const QuizWithGUI = () => {
     }
   };
 
-  // useEffect to submit answers when the quiz is completed
+  // Submit Answers when Quiz is Completed
   useEffect(() => {
     if (isCompleted) {
       submitAnswers();
-      // Removed getListings() from here to avoid redundant calls
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCompleted]);
 
-  // Function to submit answers via POST request
+  // Function to Submit Answers via POST Request
   const submitAnswers = () => {
     const postData = {
       on_campus: answers.is_freshman, // True if freshman, implying on-campus
@@ -199,7 +211,7 @@ const QuizWithGUI = () => {
       });
   };
 
-  // Function to fetch listings from backend
+  // Function to Fetch Listings from Backend
   const getListings = (user_token) => {
     fetch(`http://localhost:8000/housingapp/get-listings/?user_token=${user_token}`)
       .then((response) => {
@@ -208,8 +220,12 @@ const QuizWithGUI = () => {
         }
         return response.json();
       })
-      .then((data) => {
-        setListings(data.content || []); // Ensure listings is an array
+      .then(async (data) => {
+        const fetchedListings = data.content || [];
+        setListings(fetchedListings);
+
+        // Geocode Listings
+        await geocodeListings(fetchedListings);
       })
       .catch((error) => {
         console.error("Error fetching listings:", error);
@@ -217,10 +233,50 @@ const QuizWithGUI = () => {
       });
   };
 
-  // Function to fetch detailed information for a selected listing
-  const handleListingClick = (listing) => {
+  // Function to Geocode Listings' Addresses
+  const geocodeListings = async (listingsToGeocode) => {
+    if (!window.google || !window.google.maps) {
+      console.error("Google Maps JavaScript API not loaded.");
+      setError("Google Maps API not loaded.");
+      return;
+    }
+
+    const geocoder = new window.google.maps.Geocoder();
+    const geocodedListingsPromises = listingsToGeocode.map((listing) => {
+      return new Promise((resolve) => {
+        geocoder.geocode({ address: listing.address }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const location = results[0].geometry.location;
+            resolve({
+              ...listing,
+              latitude: location.lat(),
+              longitude: location.lng(),
+            });
+          } else {
+            console.error(`Geocode failed for address "${listing.address}": ${status}`);
+            resolve({
+              ...listing,
+              latitude: null,
+              longitude: null,
+            });
+          }
+        });
+      });
+    });
+
+    try {
+      const geocodedListings = await Promise.all(geocodedListingsPromises);
+      setGeocodedListings(geocodedListings);
+    } catch (error) {
+      console.error("Error during geocoding:", error);
+      setError("Error during geocoding addresses.");
+    }
+  };
+
+  // Function to Fetch Detailed Information for a Selected Listing
+  const handleListingClick = async (listing) => {
     // If the clicked listing is already selected, close it by setting selectedListing to null
-    if (selectedListing && selectedListing.apt_id === listing.apt_id) {
+    if (selectedListing && parseInt(selectedListing.apt_id, 10) === parseInt(listing.apt_id, 10)) {
       setSelectedListing(null); // Close the details
       setActiveMarker(null); // Close the marker's info window
       return; // Exit early to avoid fetching details again
@@ -230,42 +286,68 @@ const QuizWithGUI = () => {
     setDetailsLoading(true);
     setDetailsError(null);
 
-    fetch(`http://localhost:8000/housingapp/get-details/?apt_id=${listing.apt_id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('API Response:', data); // For debugging
-        if (data.status === "success") {
-          setSelectedListing(data.content); // Set the selected listing details
-          setActiveMarker(listing.apt_id); // Open the marker's info window
+    try {
+      const response = await fetch(`http://localhost:8000/housingapp/get-details/?apt_id=${listing.apt_id}`);
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.message || "Failed to load listing details.");
+      }
+      const data = await response.json();
+      console.log('API Response:', data); // For debugging
+      console.log('Status:', data.status);
+      console.log('Content:', data.content);
+
+      if (data.status && data.status.toLowerCase() === "success") { // Case-insensitive check
+        const detailedListing = data.content;
+        
+        // Combine geocoded data
+        const geocoded = geocodedListings.find((l) => parseInt(l.apt_id, 10) === parseInt(detailedListing.apt_id, 10));
+        if (geocoded && geocoded.latitude && geocoded.longitude) {
+          setSelectedListing({
+            ...detailedListing,
+            latitude: geocoded.latitude,
+            longitude: geocoded.longitude,
+          });
+          setActiveMarker(listing.apt_id);
+
+          // Pan and zoom the map to the selected listing
+          if (mapRef.current) {
+            mapRef.current.panTo({
+              lat: geocoded.latitude,
+              lng: geocoded.longitude,
+            });
+            mapRef.current.setZoom(16); // Adjust zoom level as desired
+          }
         } else {
-          setDetailsError(data.message || "Failed to load listing details.");
+          console.error("Geocoded data not found for the selected listing.");
+          setDetailsError("Listing does not have valid coordinates.");
         }
-        setDetailsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching listing details:", error);
-        setDetailsError("Failed to load listing details.");
-        setDetailsLoading(false);
-      });
+      } else {
+        setDetailsError(data.message || "Failed to load listing details.");
+      }
+    } catch (error) {
+      console.error("Error fetching listing details:", error);
+      setDetailsError(error.message || "Failed to load listing details.");
+    } finally {
+      setDetailsLoading(false);
+    }
   };
 
+  // Current Question
   const currentQ = questions[currentQIndex];
 
+  // Google Map Styles
   const mapContainerStyle = {
     width: '100%',
     height: '100%',
   };
 
   const defaultCenter = {
-    lat: 37.2296, // Example: Blacksburg, VA coordinates
+    lat: 37.2296, // Blacksburg, VA coordinates
     lng: -80.4139,
   };
 
+  // Inline Styles
   const styles = {
     quizContainer: {
       display: "flex",
@@ -282,9 +364,11 @@ const QuizWithGUI = () => {
       width: "100%",
       maxWidth: "1200px",
       gap: "20px",
+      flexWrap: 'wrap', // Allows wrapping on smaller screens
     },
     listings: {
       flex: "1",
+      minWidth: "300px",
       overflowY: "auto",
       maxHeight: "80vh",
       paddingRight: "10px",
@@ -295,6 +379,7 @@ const QuizWithGUI = () => {
     },
     map: {
       flex: "1",
+      minWidth: "300px",
       height: "80vh",
       border: "1px solid #ccc",
       borderRadius: "8px",
@@ -348,16 +433,6 @@ const QuizWithGUI = () => {
       borderRadius: '5px',
       backgroundColor: '#f9f9f9',
     },
-    addressButton: {
-      background: 'none',
-      border: 'none',
-      color: '#007bff',
-      textDecoration: 'underline',
-      cursor: 'pointer',
-      padding: 0,
-      font: 'inherit',
-      fontSize: '16px',
-    },
     infoWindowContent: {
       maxWidth: '200px',
     },
@@ -366,6 +441,7 @@ const QuizWithGUI = () => {
   return (
     <div className="quiz-container" style={styles.quizContainer}>
       {!isCompleted ? (
+        // Quiz Interface
         <div className="question-card" style={styles.questionCard}>
           <h2 style={styles.questionText}>{currentQ.question}</h2>
           <div className="options-container" style={styles.optionsContainer}>
@@ -420,35 +496,47 @@ const QuizWithGUI = () => {
           </div>
         </div>
       ) : (
+        // Results Interface
         <div className="results-container" style={styles.resultsContainer}>
+          {/* Listings Section */}
           <div className="listings" style={styles.listings}>
             <h2>Available Listings</h2>
-            {listings.length > 0 ? (
+            {geocodedListings.length > 0 ? (
               <ul style={{ padding: 0, listStyleType: 'none' }}>
-                {listings.map((listing) => (
+                {geocodedListings.map((listing) => (
                   <li
                     key={listing.apt_id}
                     style={{
                       marginBottom: '20px',
                       padding: '10px',
                       borderBottom: '1px solid #eee',
+                      cursor: 'pointer', // Indicates that the item is clickable
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '5px',
+                      transition: 'background-color 0.3s ease',
                     }}
+                    onClick={() => handleListingClick(listing)}
+                    role="button" // Accessibility: Indicates that the element is interactive
+                    tabIndex={0} // Makes the element focusable via keyboard
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleListingClick(listing);
+                      }
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f8ff'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
+                    aria-label={`View details for ${listing.address}`} // Accessibility: Descriptive label
                   >
-                    <p>
-                      <button
-                        onClick={() => handleListingClick(listing)}
-                        style={styles.addressButton}
-                      >
-                        {listing.address}
-                      </button>
+                    <p style={{ margin: 0, fontWeight: 'bold' }}>
+                      {listing.address}
                     </p>
-
-
-                    <p>{listing.sq_ft} Sq Ft, {listing.num_rooms} Beds, {listing.num_bathrooms} Baths</p>
-                    <p>{listing.address}</p>
+                    <p style={{ margin: 0 }}>
+                      {listing.sq_ft} Sq Ft, {listing.num_rooms} Beds, {listing.num_bathrooms} Baths
+                    </p>
                     
                     {/* Render Detailed Information */}
-                    {selectedListing && selectedListing.apt_id === listing.apt_id && (
+                    {selectedListing && parseInt(selectedListing.apt_id, 10) === parseInt(listing.apt_id, 10) && (
                       <div className="listing-details" style={styles.listingDetails}>
                         {detailsLoading ? (
                           <p>Loading details...</p>
@@ -473,33 +561,39 @@ const QuizWithGUI = () => {
               <p>No listings found matching your preferences.</p>
             )}
           </div>
+
+          {/* Map Section */}
           <div className="map" style={styles.map}>
-            <LoadScript googleMapsApiKey={"AIzaSyCj8UmwW_QrcP0-rLEWH3sB1L1n6sZVE1I"}>
+            <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={
-                  selectedListing
+                  selectedListing && selectedListing.latitude && selectedListing.longitude
                     ? { lat: selectedListing.latitude, lng: selectedListing.longitude }
                     : defaultCenter
                 }
                 zoom={selectedListing ? 14 : 12}
+                onLoad={onMapLoad} // Set the map instance
               >
-                {listings.map((listing) => (
-                  <Marker
-                    key={listing.apt_id}
-                    position={{ lat: listing.latitude, lng: listing.longitude }}
-                    onClick={() => handleListingClick(listing)}
-                  >
-                    {activeMarker === listing.apt_id && (
-                      <InfoWindow onCloseClick={() => setActiveMarker(null)}>
-                        <div style={styles.infoWindowContent}>
-                          <h3>{listing.address}</h3>
-                          <p>Price: ${listing.price_per_month}</p>
-                          {/* Add more details if desired */}
-                        </div>
-                      </InfoWindow>
-                    )}
-                  </Marker>
+                {/* Render Markers */}
+                {geocodedListings.map((listing) => (
+                  listing.latitude && listing.longitude && (
+                    <Marker
+                      key={listing.apt_id}
+                      position={{ lat: listing.latitude, lng: listing.longitude }}
+                      onClick={() => handleListingClick(listing)}
+                    >
+                      {activeMarker === listing.apt_id && (
+                        <InfoWindow onCloseClick={() => setActiveMarker(null)}>
+                          <div style={styles.infoWindowContent}>
+                            <h3>{listing.address}</h3>
+                            <p>Price: ${listing.price_per_month}</p>
+                            {/* Add more details if desired */}
+                          </div>
+                        </InfoWindow>
+                      )}
+                    </Marker>
+                  )
                 ))}
               </GoogleMap>
             </LoadScript>
