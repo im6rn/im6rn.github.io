@@ -6,7 +6,8 @@ class UserPreferences(models.Model):
     on_campus = models.BooleanField(null=True, blank=True)
     suite_style = models.BooleanField(default = False)
     in_suite_bath = models.BooleanField(default=False)
-    desired_price = models.IntegerField()
+    desired_price = models.IntegerField(default = 0)
+    max_price = models.IntegerField(default = 2000)
     utilities_included = models.BooleanField(default=False)
 
     living_learning_community = models.JSONField(default=list)
