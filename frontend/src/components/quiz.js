@@ -274,18 +274,19 @@ const QuizWithGUI = () => {
   };
 
   // Function to Fetch Detailed Information for a Selected Listing
-  const handleListingClick = async (listing) => {
+  // Function to Fetch Detailed Information for a Selected Listing
+const handleListingClick = async (listing) => {
     // If the clicked listing is already selected, close it by setting selectedListing to null
-    if (selectedListing && parseInt(selectedListing.apt_id, 10) === parseInt(listing.apt_id, 10)) {
+    if (selectedListing && selectedListing.apt_id === listing.apt_id) {
       setSelectedListing(null); // Close the details
       setActiveMarker(null); // Close the marker's info window
       return; // Exit early to avoid fetching details again
     }
-
+  
     // Otherwise, fetch the details of the newly clicked listing
     setDetailsLoading(true);
     setDetailsError(null);
-
+  
     try {
       const response = await fetch(`http://localhost:8000/housingapp/get-details/?apt_id=${listing.apt_id}`);
       if (!response.ok) {
@@ -293,13 +294,10 @@ const QuizWithGUI = () => {
         throw new Error(errData.message || "Failed to load listing details.");
       }
       const data = await response.json();
-      console.log('API Response:', data); // For debugging
-      console.log('Status:', data.status);
-      console.log('Content:', data.content);
-
-      if (data.status && data.status.toLowerCase() === "success") { // Case-insensitive check
+  
+      if (data.status.toLowerCase() === "success") {
         const detailedListing = data.content;
-        
+  
         // Combine geocoded data
         const geocoded = geocodedListings.find((l) => parseInt(l.apt_id, 10) === parseInt(detailedListing.apt_id, 10));
         if (geocoded && typeof geocoded.latitude === 'number' && typeof geocoded.longitude === 'number') {
@@ -308,8 +306,8 @@ const QuizWithGUI = () => {
             latitude: geocoded.latitude,
             longitude: geocoded.longitude,
           });
-          setActiveMarker(listing.apt_id);
-
+          setActiveMarker(listing.apt_id); // Set the clicked marker as active
+  
           // Pan and zoom the map to the selected listing
           if (mapRef.current) {
             mapRef.current.panTo({
@@ -332,6 +330,7 @@ const QuizWithGUI = () => {
       setDetailsLoading(false);
     }
   };
+  
 
   // Current Question
   const currentQ = questions[currentQIndex];
@@ -596,7 +595,8 @@ const QuizWithGUI = () => {
                         <InfoWindow onCloseClick={() => setActiveMarker(null)}>
                           <div style={styles.infoWindowContent}>
                             <h3>{listing.address}</h3>
-                            <p>Price: ${listing.price_per_month}</p>
+                            <p>Price: ${listing.price}</p>
+                            <p>Rating: {listing.rating}</p>
                             {/* Add more details if desired */}
                           </div>
                         </InfoWindow>
