@@ -1,0 +1,367 @@
+[
+    {
+        "Name": "Ambler Johnston Hall",
+        "Address": "700 Washington St. SW",
+        "Price Excluding Living Learning Programs ($)": 4438,
+        "Meal Plan": 2796.50,
+        "Dorm Style": "Mostly Traditional",
+        "Has AC": true,
+        "Learning Community": "Available, based on user choice - Academic",
+        "List of Living Learning Communities": ["Honors Residential Commons"],
+        "List of Amenities": [
+            "Air conditioning", "Commons areas", "Community kitchen", "Courtyard", 
+            "Crossover lounges", "Fitness studio", "Heating", "Laundry", 
+            "Library", "Movie theater", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "GLC at Donaldson Brown",
+        "Address": "155 Otey St.",
+        "Price Excluding Living Learning Programs ($)": 4635.50,
+        "Meal Plan": 2796.50,
+        "Dorm Style": "Traditional",
+        "Has AC": true,
+        "Near Public Transport": true,
+        "Learning Community": "Not available",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Air conditioning", "Attached dining options", "Classrooms", "Common areas", 
+            "Community kitchen", "Heating", "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "O’Shaughnessy Hall",
+        "Address": "540 Washington St. SW",
+        "Price Excluding Living Learning Programs ($)": 4438,
+        "Meal Plan": 2796.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": "Unknown",
+        "Has AC": true,
+        "Near Public Transport": true,
+        "Learning Community": "Available, based on user choice - Unknown",
+        "List of Living Learning Communities": ["The Leadership and Social Change Residential College", "Lavender House"],
+        "List of Amenities": [
+            "Air conditioning", "Classrooms", "Common areas", "Community kitchen", 
+            "Heating", "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Harper Hall",
+        "Address": "240 West Campus Dr",
+        "Price Excluding Living Learning Programs ($)": 4635,
+        "Meal Plan": 2796.50,
+        "Dorm Style": "Suite",
+        "Has AC": true,
+        "Learning Community": "Available, based on user choice - Personal Identity",
+        "List of Living Learning Communities": ["Mozaiko", "Aurora"],
+        "List of Amenities": [
+            "Air conditioning", "Common areas", "Community kitchen", "Heating", 
+            "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Payne Room (1-3)",
+        "Address": "600 Washington St. SW",
+        "Price Excluding Living Learning Programs ($)": 4635,
+        "Meal Plan": 2796.50,
+        "Dorm Style": "Some Suites, Some Traditional",
+        "Has AC": true,
+        "Learning Community": "Available, based on user choice - Personal Identity",
+        "List of Living Learning Communities": ["Meraki", "The Roost"],
+        "List of Amenities": [
+            "Air conditioning", "Classrooms", "Common areas", "Community kitchen", 
+            "Fitness studio", "Heating", "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Payne Room 4",
+        "Address": "600 Washington St. SW",
+        "Price Excluding Living Learning Programs ($)": 4101,
+        "Meal Plan": 2796.50,
+        "Dorm Style": "Some Suites, Some Traditional",
+        "Has AC": true,
+        "Learning Community": "Available, based on user choice - Personal Identity",
+        "List of Living Learning Communities": ["Meraki", "The Roost"],
+        "List of Amenities": [
+            "Air conditioning", "Classrooms", "Common areas", "Community kitchen", 
+            "Fitness studio", "Heating", "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Campbell Hall",
+        "Address": "300 Drillfield Dr.",
+        "Price Excluding Living Learning Programs ($)": 4101,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Has AC": false,
+        "Learning Community": "Not Available",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Common areas", "Community kitchen", "Heating", "Laundry", 
+            "Study lounges", "Wireless Internet"
+        ]
+    },
+    {
+        "Name": "Hillcrest Hall",
+        "Address": "385 West Campus Dr.",
+        "Price Excluding Living Learning Programs ($)": 3924.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Suites",
+        "Private Bathroom": "A few",
+        "Has AC": false,
+        "Learning Community": "Not Available",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Common areas", "Community kitchen", "Heating", "Laundry", 
+            "Study lounges", "Wireless Internet"
+        ]
+    },
+    {
+        "Name": "Hoge Hall",
+        "Address": "570 Washington St. SW",
+        "Price Excluding Living Learning Programs ($)": 3924.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "Available, based on user choice - Academic",
+        "List of Living Learning Communities": "Not available",
+        "List of Amenities": "N/A"
+    },
+    {
+        "Name": "Whitehurst Hall",
+        "Address": "240 Kent St., Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "N/A",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Common areas", "Community kitchen", "Heating", "Laundry", 
+            "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Cochrane Hall",
+        "Address": "770 Washington St.",
+        "Price Excluding Living Learning Programs ($)": 4635.00,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Suites",
+        "Private Bathroom": true,
+        "Has AC": true,
+        "Learning Community": "Available, based on user choice - Academic",
+        "List of Living Learning Communities": ["IMPACT", "Securitas"],
+        "List of Amenities": [
+            "Air conditioning", "Attached dining hall", "Common areas", 
+            "Community kitchen", "Heating", "Laundry", "Study lounges", 
+            "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Johnson Hall",
+        "Address": "500 Washington St. SW",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "Not available",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Classrooms", "Common areas", "Community kitchen", "Heating", 
+            "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Peddrew-Yates Hall",
+        "Address": "610 Washington St. SW",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 4635.50,
+        "Dorm Style": "Suites",
+        "Private Bathroom": "Few",
+        "Has AC": true,
+        "Learning Community": "Yes, based on user input - Academic",
+        "List of Living Learning Communities": ["Ujima"],
+        "List of Amenities": "N/A"
+    },
+    {
+        "Name": "The Creativity And Innovation District Residence Hall",
+        "Address": "185 Kent St.",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 4635.50,
+        "Dorm Style": "Traditional and Suite",
+        "Private Bathroom": "Few",
+        "Has AC": true,
+        "Learning Community": "Yes, based on user input - Academic and Personal Identity",
+        "List of Living Learning Communities": ["Studio 72", "Innovate", "Rhizome"],
+        "List of Amenities": [
+            "Air conditioning", "Art studios", "Classrooms", "Common areas", 
+            "Community kitchen", "Heating", "Laundry", "Makerspace", 
+            "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Miles Hall",
+        "Address": "410 Washington St. SW",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "Not Available",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Common areas", "Community kitchen", "Heating", "Laundry", 
+            "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Vawter Hall",
+        "Address": "180 Kent St., Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "N/A",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Common areas", "Community kitchen", "Heating", "Laundry", 
+            "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Upper Quad Hall North",
+        "Address": "280 Stanger St., Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 4635.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": true,
+        "Learning Community": "Yes",
+        "List of Living Learning Communities": ["Corps of Cadets"],
+        "List of Amenities": [
+            "Air conditioning", "Classrooms", "Common areas", "Community kitchen", 
+            "Heating", "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Main/West Eggleston",
+        "Address": "440 Drillfield Dr., Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "Not available",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": "N/A"
+    },
+    {
+        "Name": "East Eggleston",
+        "Address": "440 Drillfield Dr., Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 4101,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": true,
+        "Learning Community": "Not available",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Air conditioning", "Common areas", "Community kitchen", "Heating", 
+            "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "New Hall",
+        "Address": "190 West Campus Dr., Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 4635.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Private room",
+        "Private Bathroom": true,
+        "Has AC": true,
+        "Learning Community": "Not available",
+        "List of Living Learning Communities": "N/A",
+        "List of Amenities": [
+            "Air conditioning", "Common areas", "Community kitchen", "Heating", 
+            "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "New Residence Hall",
+        "Address": "590 Washington St. SW, Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 4635.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Suites",
+        "Private Bathroom": "Some",
+        "Has AC": true,
+        "Learning Community": "Yes",
+        "List of Living Learning Communities": ["Orion"],
+        "List of Amenities": [
+            "Air conditioning", "Common areas", "Community kitchen", "Heating", 
+            "Laundry", "Seminar room", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Newman Hall",
+        "Address": "200 Kent St., Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "Yes",
+        "List of Living Learning Communities": ["Transfer Experience", "VIA"],
+        "List of Amenities": [
+            "Common areas", "Community kitchen", "Heating", "Laundry", 
+            "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Payne Hall",
+        "Address": "600 Washington St. SW, Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 4635.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional and Suites",
+        "Private Bathroom": "Few",
+        "Has AC": true,
+        "Learning Community": "Yes",
+        "List of Living Learning Communities": ["Meraki", "The Roost"],
+        "List of Amenities": [
+            "Air conditioning", "Classrooms", "Common areas", "Community kitchen", 
+            "Fitness studio", "Heating", "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Pritchard Hall",
+        "Address": "630 Washington St. SW, Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "Yes",
+        "List of Living Learning Communities": ["Digerati", "Galileo & Hypatia"],
+        "List of Amenities": [
+            "Common areas", "Community kitchen", "Courtyard", "Heating", 
+            "Laundry", "Study lounges", "Wireless internet"
+        ]
+    },
+    {
+        "Name": "Slusher Hall",
+        "Address": "201 Ag Quad Lane, Blacksburg, VA 24061",
+        "Price Excluding Living Learning Programs ($)": 3382.50,
+        "Meal Plan": 3382.50,
+        "Dorm Style": "Traditional",
+        "Private Bathroom": false,
+        "Has AC": false,
+        "Learning Community": "Yes",
+        "List of Living Learning Communities": ["GenerationOne", "Reach", "Thrive"],
+        "List of Amenities": [
+            "Common areas", "Community kitchen", "Heating", "Laundry", 
+            "Study lounges", "Wireless internet"
+        ]
+    }
+]
