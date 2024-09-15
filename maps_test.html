@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Estate Listings with Geocoding API</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #container {
+      display: flex;
+      height: 100vh;
+    }
+
+    #listings {
+      width: 35%;
+      overflow-y: scroll;
+      padding: 20px;
+      box-shadow: 2px 0px 5px rgba(0,0,0,0.1);
+    }
+
+    #map {
+      width: 65%;
+      height: 100%;
+    }
+
+    .listing {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .listing h3, .listing p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <!-- Listings Section -->
+  <div id="listings">
+    <div class="listing" onclick="zoomToMarker(0)">
+      <h3>$925,000 - 602 Floyd St</h3>
+      <p>5 Beds, 4 Baths, 5,369 Sq Ft</p>
+      <p>Blacksburg, VA 24060</p>
+    </div>
+
+    <div class="listing" onclick="zoomToMarker(1)">
+      <h3>$750,000 - 313 Sunset Blvd</h3>
+      <p>3,840 Sq Ft</p>
+      <p>Blacksburg, VA 24060</p>
+    </div>
+
+    <div class="listing" onclick="zoomToMarker(2)">
+      <h3>$695,000 - 613 Leisure Ln</h3>
+      <p>6 Beds, 5 Baths, 5,781 Sq Ft</p>
+      <p>Blacksburg, VA 24060</p>
+    </div>
+  </div>
+
+  <!-- Map Section -->
+  <div id="map"></div>
+</div>
+
+<!-- Google Maps API -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj8UmwW_QrcP0-rLEWH3sB1L1n6sZVE1I&callback=initMap"
+  async defer></script>
+
+<!-- Geocoding and Markers -->
+<script>
+  let map;
+  let markers = [];
+  const addresses = [
+    '602 Floyd St, Blacksburg, VA',
+    '313 Sunset Blvd, Blacksburg, VA',
+    '613 Leisure Ln, Blacksburg, VA'
+  ];
+
+  // Function to initialize the map
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 37.2296, lng: -80.4139 }, // Centered at Blacksburg
+      zoom: 13,
+    });
+
+    const geocoder = new google.maps.Geocoder();
+
+    // Loop through addresses and place markers
+    addresses.forEach((address, index) => {
+      geocodeAddress(geocoder, map, address, index);
+    });
+  }
+
+  // Function to geocode an address and place a marker on the map
+  function geocodeAddress(geocoder, map, address, index) {
+    geocoder.geocode({ address: address }, function(results, status) {
+      if (status === 'OK') {
+        const marker = new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location,
+          title: address,
+        });
+        markers.push(marker);
+      } else {
+        console.error('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+
+  // Function to zoom into a specific marker when a listing is clicked
+  function zoomToMarker(index) {
+    const marker = markers[index];
+    if (marker) {
+      map.setCenter(marker.getPosition());
+      map.setZoom(15);
+    }
+  }
+</script>
+
+</body>
+</html>
