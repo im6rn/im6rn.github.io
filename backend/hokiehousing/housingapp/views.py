@@ -40,15 +40,19 @@ def get_apartment_listings(request):
         response = []
 
         for apt in data:
+
             tn = {
                 "apt_id": apt["apt_id"],
                 "sq_ft": apt["sq_ft"],
                 "num_rooms": apt["num_rooms"],
                 "num_bathrooms": apt["num_bathrooms"],
-                "address": apt["address"]
+                "address": apt["address"],
+                "rating": calculate_score(apt, preferences)
             }
 
             response.append(tn)
+
+        sorted_response = sorted(response, key=lambda x: x['rating'], reverse=True)
         
         return JsonResponse({"status": "success", "content": response}, safe = False)
 
