@@ -198,7 +198,7 @@ const QuizWithGUI = () => {
 
   // Function to submit answers via POST request
   const submitAnswers = () => {
-    fetch("../backend/hokiehousing/housingapp/quiz-submit", {
+    fetch("http://localhost:3000/backend/hokiehousing/housingapp/quiz-submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -224,7 +224,7 @@ const QuizWithGUI = () => {
       justifyContent: "center",
       alignItems: "center",
       minHeight: "100vh",
-      backgroundColor: "#f4f4f9",
+      backgroundColor: "#F4F4F9",
       padding: "20px",
     },
     questionCard: {

@@ -1,10 +1,23 @@
 {
-    "is_freshman": "No",
+    "on_campus": "Yes",
+    "in_suite_bath": "Yes",
     "desired_price": "~$1000",
+    "max_price": "$2000+",
     "utilities_included": "Yes",
-    "desired_bedrooms": "2",
-    "desired_bathrooms": "1",
-    "desired_amenities": ["Parking", "Gym"],
-    "public_transit": "Yes"
+    "living_learning_community": "Yes",
+    "ac": "Yes",
+    "public_transport": "Yes",
+    "desired_amenities": [
+      "Parking",
+      "Gym",
+      "In-unit washer/dryer",
+      "Balcony"
+    ],
+    "furnished": "Yes",
+    "desired_bathrooms": "2",
+    "desired_bedrooms": "3",
+    "desired_distance_from_campus": "5 miles",
+    "max_distance_from_campus": "10 miles",
+    "importance": "High"
   }
   
