@@ -320,7 +320,7 @@ const QuizWithGUI = () => {
     // When you ping the get_apartment_listings endpoint, pass the user_token via query parameter
   // Function to fetch listings from backend
   const getListings = (user_token) => {
-    fetch(`http://localhost:3000/backend/hokiehousing/housingapp/get-listings?user_token=${user_token}`)
+    fetch(`http://localhost:3000/backend/hokiehousing/housingapp/get-listings`)
       .then((response) => response.json())
       .then((data) => {
         setListings(data);  // Set the listings in state
